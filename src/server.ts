@@ -1,40 +1,62 @@
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import express from "express";
-import "dotenv/config";
-import userRouter from "./routes/user.route";
-import authRouter from "./routes/auth.route";
-import profileRouter from "./routes/profile.route";
-import jambRouter from "./routes/questions.route";
-import { errorHandler, multerErrorHandler } from "./middleWares/errors.middleware";
-import scoresRouter from "./routes/scores.route";
-import upgradeRouter from "./routes/upgradeRequest.route";
-import activationRouter from "./routes/activate.route";
-import dashboardRouter from "./routes/dashboard.route";
+import http from "http";
+import { Server } from "socket.io";
+import app from "./app";
 
-const app = express();
+const server = http.createServer(app);
+const port = process.env.PORT || 5000;
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
-}))
-app.use("/api/accountActivation", activationRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/dashboard", dashboardRouter)
-app.use("/api/jamb", jambRouter)
-app.use("/api/profile", profileRouter)
-app.use("/api/scores", scoresRouter);
-app.use("/api/upgradeRequests", upgradeRouter);
-app.use("/api/user", userRouter)
-app.use("/", (req, res) => {
-    res.status(404).json("Page not found");
+const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
 });
-// app.use(multerErrorHandler);
-app.use(errorHandler);
 
-app.listen(3000, '0.0.0.0', () => 
-    console.log("Server listening on port 3000")
-);
-export default app;
+type OnlineUser = {
+    userId: number;
+    role: "user" | "admin" | "master";
+}
+
+const onlineUsers = new Map<string, OnlineUser>();
+
+io.on("connection", socket => {
+    console.log("User connected:", socket.id);
+
+    console.log("Handshake auth:", socket.handshake.auth);
+    const { userId, role } = socket.handshake.auth;
+
+    if (userId && role) {
+        onlineUsers.set(socket.id, { userId, role });
+    }
+
+    emitUserStats();
+
+    socket.on("disconnect", () => {
+        console.log("User disconnected:", socket.id);
+
+        onlineUsers.delete(socket.id);
+        emitUserStats();
+    });
+});
+
+const emitUserStats = () => {
+    let users = 0;
+    let admins = 0;
+    let masters = 0;
+
+    onlineUsers.forEach(u => {
+        if (u.role === "user") users++;
+        if (u.role === "admin") admins++;
+        if (u.role === "master") masters++;
+    });
+
+    io.emit("activeUsers", {
+        users,
+        admins,
+        masters,
+        total: users + admins + masters
+    })
+}
+
+server.listen(port, () => {
+    console.log("Server running on port", port);
+});
