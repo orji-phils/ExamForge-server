@@ -1,2 +1,5 @@
-# libs folder
-libs/
+# libs files
+libs/jambDBSchema.sql
+libs/userDBSchema.sql
+libs/practiceDBSchema.sql
+libs/appendTables   .js
