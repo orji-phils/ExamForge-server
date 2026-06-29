@@ -2,6 +2,10 @@ import mysql from "mysql2/promise";
 import "dotenv/config";
 
 export const connectDatabase = async (databaseName: string) => {
+    console.log("Host:", process.env.HOST);
+    console.log("Host:", process.env.MYSQLHOST);
+    console.log("Port:", process.env.PORT);
+    console.log("Port:", process.env.MYSQLPORT);
     const serverConfig = {
         host: process.env.HOST!,
         user: process.env.USER!,

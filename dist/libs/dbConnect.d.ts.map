@@ -1,0 +1,1 @@
+{"version":3,"file":"dbConnect.d.ts","sourceRoot":"","sources":["../../src/libs/dbConnect.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,gBAAgB,CAAC;AACnC,OAAO,eAAe,CAAC;AAEvB,eAAO,MAAM,eAAe,GAAU,cAAc,MAAM,wBAqCxD,CAAA;AAEF,eAAO,MAAM,MAAM,qBAA4B,CAAC;AAChD,eAAO,MAAO,eAAe,qBAAuC,CAAC;AACrE,eAAO,MAAM,MAAM,qBAA4B,CAAC"}
