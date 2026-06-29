@@ -4,12 +4,12 @@ import "dotenv/config";
 export const connectDatabase = async (databaseName: string) => {
     console.log("Host:", process.env.HOST);
     console.log("Host:", process.env.MYSQLHOST);
-    console.log("Port:", process.env.PORT);
+    console.log("Port:", process.env.DB_PORT);
     console.log("Port:", process.env.MYSQLPORT);
     const serverConfig = {
         host: process.env.HOST!,
         user: process.env.USER!,
-        port: 57887,
+        port: Number(process.env.DB_PORT!) || 3306,
         password: process.env.PASSWORD!,
         waitForConnections: true,
         connectionLimit: 10,
@@ -36,6 +36,7 @@ export const connectDatabase = async (databaseName: string) => {
         user: process.env.USER!,
         database: databaseName,
         password: process.env.PASSWORD!,
+        port: Number(process.env.DB_PORT!) || 3306,
         waitForConnections: true,
         connectionLimit: 10,
         queueLimit: 0
