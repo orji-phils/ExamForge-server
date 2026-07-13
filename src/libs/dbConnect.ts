@@ -2,15 +2,6 @@ import mysql from "mysql2/promise";
 import "dotenv/config";
 
 export const connectDatabase = async (databaseName: string) => {
-    console.log({
-    HOST: process.env.MYSQLHOST,
-    USER: process.env.MYSQLUSER,
-    PASSWORD_EXISTS: !!process.env.MYSQLPASSWORD,
-    DATABASE: process.env.MYSQLDATABASE,
-    DB_PORT: process.env.MYSQLPORT,
-    MYSQLHOST: process.env.MYSQLHOST,
-    MYSQLPORT: process.env.MYSQLPORT
-});
     const serverConfig = {
         host: process.env.MYSQLHOST!,
         user: process.env.MYSQLUSER!,
