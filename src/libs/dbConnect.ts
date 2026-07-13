@@ -37,14 +37,8 @@ export const connectDatabase = async (databaseName: string) => {
     }
 
     const pool = mysql.createPool({
-        host: process.env.HOST!,
-        user: process.env.USER!,
+        ...serverConfig,
         database: databaseName,
-        password: process.env.PASSWORD!,
-        port: Number(process.env.DB_PORT!) || 3306,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0
     });
 
     return pool;
